@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 )
 
-const CHECK_STATUS_WAIT_TIME time.Duration = 15
+const CHECK_STATUS_WAIT_TIME time.Duration = 15 * time.Second
 
 func (c APIClient) DeleteNameServers(serviceName string) error {
 	return c.SetNameServerType(serviceName, NSHosted)
@@ -74,7 +74,7 @@ func (c APIClient) CheckOVHTask(err chan<- error, domain string, id int64) {
 
 	apiErr := error(nil)
 	for {
-		time.Sleep(time.Second * CHECK_STATUS_WAIT_TIME)
+		time.Sleep(CHECK_STATUS_WAIT_TIME)
 
 		response := TaskReposnse{}
 		err := c.Client.Get(
@@ -101,7 +101,7 @@ func (c APIClient) CheckOVHTask(err chan<- error, domain string, id int64) {
 		}
 
 		if response.Status == "error" || response.Status == "cancelled" {
-			tflog.Debug(c.ctx, fmt.Sprintf("[CDC_OVH] CheckOVHTask status is %s, error occured, breaking", response.Status))
+			tflog.Debug(c.ctx, fmt.Sprintf("[CDC_OVH] CheckOVHTask status is %s, error occurred, breaking", response.Status))
 			apiErr = fmt.Errorf("task status %s. check OVH Panel", response.Status)
 			break
 		}
