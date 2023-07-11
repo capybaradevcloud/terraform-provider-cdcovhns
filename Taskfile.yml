@@ -1,0 +1,54 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  PLUGIN_VERSION: $(git describe --tags `git rev-list --tags --max-count=1` | sed 's/v//')
+  OUTPUT_FILENAME: terraform-provider-cdc-ovh-ns
+  OUTPUT_DIR: ./builds
+
+tasks:
+  default:
+    cmds:
+      - task --list
+    silent: true
+
+  build:
+    desc: Build the plugin into builds folder.
+    cmds:
+      - echo "Building {{.OUTPUT_FILENAME}}"
+      - go build -gcflags "all=-N -l" -o "{{.OUTPUT_DIR}}/{{.OUTPUT_FILENAME}}"
+      - echo "Done!"
+    silent: true
+
+  generate-docs:
+    desc: Generate the docs for the provider
+    cmds:
+      - |
+        go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs generate \
+            --examples-dir=./examples \
+            --provider-name="cdcovhns" \
+            --rendered-provider-name="CDC OVH Name Servers"
+
+  install:
+    desc: Build and install the plugin in the correct folder (resolved automatically based on current Operating System).
+    vars:
+      WINDOWS_OUTPUT_PATH: '{{.APPDATA}}\HashiCorp\Terraform\plugins\registry.terraform.io\cdc\ovh-ns\{{.PLUGIN_VERSION}}\{{OS}}_{{ARCH}}\{{.OUTPUT_FILENAME}}'
+      DARWIN_OUTPUT_PATH: '{{.HOME}}/Library/Application Support/io.terraform/plugins/registry.terraform.io/cdc/ovh-ns/{{.PLUGIN_VERSION}}/{{OS}}_{{ARCH}}/{{.OUTPUT_FILENAME}}'
+      UNIX_OUTPUT_PATH: '{{.HOME}}/.local/share/terraform/plugins/registry.terraform.io/cdc/ovh-ns/{{.PLUGIN_VERSION}}/{{OS}}_{{ARCH}}/{{.OUTPUT_FILENAME}}'
+    cmds:
+      - |
+        {{if eq OS "windows"}}
+          echo "Building and installing plugin in {{.WINDOWS_OUTPUT_PATH}}"
+          go build -o "{{.WINDOWS_OUTPUT_PATH}}"
+        {{else}}
+          {{if eq OS "darwin"}}
+            echo "Building and installing plugin in {{.DARWIN_OUTPUT_PATH}}"
+            go build -o "{{.DARWIN_OUTPUT_PATH}}"
+          {{else}}
+            echo "Building and installing plugin in {{.UNIX_OUTPUT_PATH}}"
+            go build -o "{{.UNIX_OUTPUT_PATH}}"
+          {{end}}
+        {{end}}
+        echo "Done!"
+    silent: true
