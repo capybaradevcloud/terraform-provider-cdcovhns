@@ -82,10 +82,8 @@ func (r *CDCOvhNSResource) Schema(ctx context.Context, req resource.SchemaReques
 							},
 						},
 						"host": schema.StringAttribute{
-							Optional:    true,
-							Computed:    true,
+							Required:    true,
 							Description: "DNS Hostname",
-							Default:     stringdefault.StaticString(""),
 						},
 						"ip": schema.StringAttribute{
 							Optional:    true,
@@ -128,13 +126,6 @@ func (r CDCOvhNSResource) ValidateConfig(ctx context.Context, req resource.Valid
 	}
 
 	for key, NameServer := range data.NameServers {
-		if (strings.Trim(NameServer.Host.ValueString(), `"`) == "" || NameServer.Host.IsNull()) && (strings.Trim(NameServer.IP.ValueString(), `"`) == "" || NameServer.IP.IsNull()) {
-			resp.Diagnostics.AddAttributeError(
-				path.Root("name_servers").AtMapKey(key),
-				"Missing Attribute Configuration",
-				"At leat one of IP or Host must be set",
-			)
-		}
 		if (strings.Trim(NameServer.IP.ValueString(), `"`) != "" || !NameServer.IP.IsNull()) && net.ParseIP(NameServer.IP.ValueString()) == nil {
 			resp.Diagnostics.AddAttributeError(
 				path.Root("name_servers").AtMapKey(key),

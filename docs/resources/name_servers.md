@@ -42,9 +42,12 @@ resource "cdcovhns_name_servers" "examplecom" {
 <a id="nestedatt--name_servers"></a>
 ### Nested Schema for `name_servers`
 
-Optional:
+Required:
 
 - `host` (String) DNS Hostname
+
+Optional:
+
 - `ip` (String) DNS IP address
 
 Read-Only:
