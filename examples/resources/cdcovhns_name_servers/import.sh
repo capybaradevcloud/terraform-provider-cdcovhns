@@ -1,0 +1,1 @@
+terraform import cdcovhns_name_servers.examplecom example.com

@@ -238,10 +238,18 @@ func (r *CDCOvhNSResource) Read(ctx context.Context, req resource.ReadRequest, r
 	nameServers, err := r.client.GetNameServersFromAPI(serviceName)
 	nsTypeResponse, nsTypeErr := r.client.GetNameServersType(serviceName)
 
-	if err != nil || nsTypeErr != nil {
+	if err != nil {
 		resp.Diagnostics.AddError(
 			"Error reading Name Servers",
 			"READ: Could not read current name servers, unexpected error: "+err.Error(),
+		)
+		return
+	}
+
+	if nsTypeErr != nil {
+		resp.Diagnostics.AddError(
+			"Error reading Name Servers",
+			"READ: Could not read current name servers, unexpected error: "+nsTypeErr.Error(),
 		)
 		return
 	}

@@ -1,12 +1,12 @@
-resource "cdcovhns_name_servers" "capybaradevcloud" {
-  service_name = "capybaradev.cloud"
+resource "cdcovhns_name_servers" "examplecom" {
+  service_name = "example.com"
 
   name_servers = {
     "ns1" = {
-      host = "noel.ns.cloudflare.com"
+      host = "noel.ns.example.com"
     },
     "ns2" = {
-      host = "june.ns.cloudflare.com"
+      host = "june.ns.example.com"
     },
   }
 }

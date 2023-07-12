@@ -63,7 +63,7 @@ func (c APIClient) SetNameServerType(serviceName string, nsType string) error {
 		nsTypeObject,
 		nil,
 	)
-	tflog.Debug(c.ctx, fmt.Sprintf("[CDC_OVH] GetNameServersType ERR: %v", err))
+	tflog.Debug(c.ctx, fmt.Sprintf("[CDC_OVH] SetNameServerType ERR: %v", err))
 	return err
 }
 
@@ -126,10 +126,10 @@ func (c APIClient) GetNameServersFromAPI(serviceName string) (map[string]NameSer
 		&ids,
 	)
 
-	tflog.Debug(c.ctx, fmt.Sprintf("[CDC_OVH] GetNameServersType RESP: %v", ids))
+	tflog.Debug(c.ctx, fmt.Sprintf("[CDC_OVH] GetNameServersFromAPI RESP: %v", ids))
 
 	if err != nil {
-		tflog.Debug(c.ctx, fmt.Sprintf("[CDC_OVH] GetNameServersType ERR: %v", err))
+		tflog.Debug(c.ctx, fmt.Sprintf("[CDC_OVH] GetNameServersFromAPI ERR: %v", err))
 		return nil, err
 	}
 
@@ -144,10 +144,10 @@ func (c APIClient) GetNameServersFromAPI(serviceName string) (map[string]NameSer
 			&nsResponse,
 		)
 
-		tflog.Debug(c.ctx, fmt.Sprintf("[CDC_OVH] GetNameServersType RESP: %v", nsResponse))
+		tflog.Debug(c.ctx, fmt.Sprintf("[CDC_OVH] GetNameServersFromAPI RESP: %v", nsResponse))
 
 		if err != nil {
-			tflog.Debug(c.ctx, fmt.Sprintf("[CDC_OVH] GetNameServersType ERR: %v", err))
+			tflog.Debug(c.ctx, fmt.Sprintf("[CDC_OVH] GetNameServersFromAPI ERR: %v", err))
 			return nil, err
 		}
 

@@ -7,3 +7,4 @@
 - add Terraform version to Client User Agent
 - add data sources
 - add integration tests
+- add more linters and improve CI/CD workflow

@@ -8,7 +8,25 @@ description: |-
 
 # cdcovhns Provider
 
+This provider allows managing Name Servers in OVH.
 
+To generate the keys required for authorization, go to: https://www.ovh.com/auth/api/createToken?GET=/domain/*&POST=/domain/*&PUT=/domain/*&DELETE=/domain/*
+
+Required permissions for managing the selected domain:
+GET /domain/<DOMAIN>*
+POST /domain/<DOMAIN>*
+PUT /domain/<DOMAIN>*
+
+Alternatively, less secure (for managing all domains):
+GET /domain/*
+POST /domain/*
+PUT /domain/*
+
+Important information:
+
+- The create method is not implemented and will not be. You need to import the current name servers first.
+- Running `terraform destroy` sends a request that resets the name servers to OVH's default servers and changes their type to `hosted`.
+- If there are any running (doing, todo state) tasks on the domain, terraform will not perform any actions to avoid disrupting in the state and API.
 
 ## Example Usage
 
