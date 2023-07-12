@@ -10,17 +10,17 @@ description: |-
 
 This provider allows managing Name Servers in OVH.
 
-To generate the keys required for authorization, go to: https://www.ovh.com/auth/api/createToken?GET=/domain/*&POST=/domain/*&PUT=/domain/*&DELETE=/domain/*
+To generate the keys required for authorization, go to: https://www.ovh.com/auth/api/createToken?GET=/domain/*&POST=/domain/*&PUT=/domain/*
 
 Required permissions for managing the selected domain:
-GET /domain/<DOMAIN>*
-POST /domain/<DOMAIN>*
-PUT /domain/<DOMAIN>*
+- GET /domain/<DOMAIN>*
+- POST /domain/<DOMAIN>*
+- PUT /domain/<DOMAIN>*
 
 Alternatively, less secure (for managing all domains):
-GET /domain/*
-POST /domain/*
-PUT /domain/*
+- GET /domain/*
+- POST /domain/*
+- PUT /domain/*
 
 Important information:
 
