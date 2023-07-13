@@ -1,4 +1,4 @@
-# CDC OVH Name Servers Provider
+# Terraform CDC OVH Name Servers Provider
 
 This repository contains a Terraform provider for managing name servers in OVH. The provider allows users to automate the configuration and management of Name Servers records within their OVH infrastructure using Terraform.
 
