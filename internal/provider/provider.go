@@ -2,6 +2,7 @@ package provider
 
 import (
 	"context"
+	"os"
 
 	"github.com/capybaradevcloud/terraform-provider-cdcovhns/internal/api"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
@@ -33,23 +34,27 @@ func (p *CDCOvhNSProvider) Schema(ctx context.Context, req provider.SchemaReques
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
 			"endpoint": schema.StringAttribute{
-				MarkdownDescription: "The OVH API endpoint to target (eg: \"ovh-eu\").",
-				Required:            true,
+				MarkdownDescription: "The OVH API endpoint to target (eg: \"ovh-eu\"). " +
+					"Can also be configured using the `OVH_ENDPOINT` environment variable.",
+				Optional: true,
 			},
 			"application_key": schema.StringAttribute{
-				MarkdownDescription: "The OVH API Application Key.",
-				Required:            true,
-				Sensitive:           true,
+				MarkdownDescription: "The OVH API Application Key. " +
+					"Can also be configured using the `OVH_APPLICATION_KEY` environment variable.",
+				Sensitive: true,
+				Optional:  true,
 			},
 			"application_secret": schema.StringAttribute{
-				MarkdownDescription: "The OVH API Application Secret.",
-				Required:            true,
-				Sensitive:           true,
+				MarkdownDescription: "The OVH API Application Secret. " +
+					"Can also be configured using the `OVH_SECRET_KEY` environment variable.",
+				Sensitive: true,
+				Optional:  true,
 			},
 			"consumer_key": schema.StringAttribute{
-				MarkdownDescription: "The OVH API Consumer key.",
-				Required:            true,
-				Sensitive:           true,
+				MarkdownDescription: "The OVH API Consumer key. " +
+					"Can also be configured using the `OVH_CONSUMER_KEY` environment variable.",
+				Sensitive: true,
+				Optional:  true,
 			},
 		},
 	}
@@ -60,11 +65,31 @@ func (p *CDCOvhNSProvider) Configure(ctx context.Context, req provider.Configure
 
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
 
+	endpoint := os.Getenv("OVH_ENDPOINT")
+	if data.Endpoint.ValueString() != "" {
+		endpoint = data.Endpoint.ValueString()
+	}
+
+	applicationKey := os.Getenv("OVH_APPLICATION_KEY")
+	if data.ApplicationKey.ValueString() != "" {
+		applicationKey = data.ApplicationKey.ValueString()
+	}
+
+	applicationSecret := os.Getenv("OVH_APPLICATION_SECRET")
+	if data.ApplicationSecret.ValueString() != "" {
+		applicationSecret = data.ApplicationSecret.ValueString()
+	}
+
+	consumerKey := os.Getenv("OVH_CONSUMER_KEY")
+	if data.ConsumerKey.ValueString() != "" {
+		consumerKey = data.ConsumerKey.ValueString()
+	}
+
 	ovhData := api.OVHCredentials{
-		Endpoint:          data.Endpoint.ValueString(),
-		ApplicationKey:    data.ApplicationKey.ValueString(),
-		ApplicationSecret: data.ApplicationSecret.ValueString(),
-		ConsumerKey:       data.ConsumerKey.ValueString(),
+		Endpoint:          endpoint,
+		ApplicationKey:    applicationKey,
+		ApplicationSecret: applicationSecret,
+		ConsumerKey:       consumerKey,
 	}
 
 	client, err := api.GetClient(ovhData, ctx)
